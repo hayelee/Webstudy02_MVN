@@ -15,7 +15,7 @@
 </head>
 <body>
 <h4>가입 양식</h4>
-<form method="post">
+<form method="post"> 
    <table>
       <tr>
          <th>회원아이디</th>
