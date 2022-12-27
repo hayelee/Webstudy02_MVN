@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.member.dao.MemberDAO">
+
+   <select id="selectMemberList" resultType="MemberVO" ><!-- 자동으로 바인딩 했던 걸 수동으로 바인딩 하겠다~ -->
+      SELECT  MEM_ID, MEM_NAME, MEM_ADD1, MEM_HP
+         , MEM_MAIL, MEM_MILEAGE           
+      FROM MEMBER
+   </select>
+   
+   <select id="selectMember" parameterType="string" resultType="MemberVO">
+      SELECT
+          mem_id,     mem_pass,   mem_name,
+          mem_regno1, mem_regno2,
+          to_char(mem_bir, 'yyyy-mm-dd') mem_bir,
+          mem_zip,    mem_add1,   mem_add2,
+          mem_hometel,    mem_comtel, mem_hp,
+          mem_mail,   mem_job,    mem_like,
+          mem_memorial,
+          to_char(mem_memorialday, 'yyyy-mm-dd') mem_memorialday,
+          mem_mileage,
+          mem_delete
+      FROM    member                              
+      WHERE MEM_ID = #{memId}                                           
+   </select>
+   
+   <insert id="insertMember" parameterType="MemberVO">
+      INSERT INTO MEMBER (
+         MEM_ID
+         , MEM_PASS
+         , MEM_NAME
+         , MEM_REGNO1
+         , MEM_REGNO2
+         , MEM_BIR
+         , MEM_ZIP
+         , MEM_ADD1
+         , MEM_ADD2 
+         , MEM_HOMETEL
+         , MEM_COMTEL
+         , MEM_HP
+         , MEM_MAIL
+         , MEM_JOB
+         , MEM_LIKE
+         , MEM_MEMORIAL
+         , MEM_MEMORIALDAY
+         , MEM_MILEAGE
+         , MEM_DELETE
+      ) VALUES (
+         #{memId,jdbcType=VARCHAR}
+         , #{memPass,jdbcType=VARCHAR}
+         , #{memName,jdbcType=VARCHAR}
+         , #{memRegno1,jdbcType=CHAR}
+         , #{memRegno2,jdbcType=CHAR}
+         , TO_DATE(#{memBir,jdbcType=DATE}, 'YYYY-MM-DD')
+         , #{memZip,jdbcType=CHAR}
+         , #{memAdd1,jdbcType=VARCHAR}
+         , #{memAdd2,jdbcType=VARCHAR}
+         , #{memHometel,jdbcType=VARCHAR}
+         , #{memComtel,jdbcType=VARCHAR}
+         , #{memHp,jdbcType=VARCHAR}
+         , #{memMail,jdbcType=VARCHAR}
+         , #{memJob,jdbcType=VARCHAR}
+         , #{memLike,jdbcType=VARCHAR}
+         , #{memMemorial,jdbcType=VARCHAR}
+         , TO_DATE(#{memMemorialday,jdbcType=DATE}, 'YYYY-MM-DD')
+         , #{memMileage,jdbcType=NUMERIC}
+         , #{memDelete,jdbcType=VARCHAR}
+      )
+   </insert>
+   
+<!--    <update id="updateMember" parameterType="MemberVO"> -->
+<!--       UPDATE member -->
+<!--       SET -->
+<!--       MEM_PASS = #{memPass},  -->
+<!--       MEM_NAME = #{memName},  -->
+<!--       MEM_REGNO1 = #{memRegno1},  -->
+<!--       MEM_REGNO2 = #{memRegno2},  -->
+<!--       MEM_BIR = #{memBir},  -->
+<!--       MEM_ZIP = #{memZip},  -->
+<!--       MEM_ADD1 = #{memAdd1},  -->
+<!--       MEM_ADD2 = #{memAdd2},  -->
+<!--       MEM_HOMETEL = #{memHometel}, -->
+<!--       MEM_COMTEL = #{memComtel},  -->
+<!--       MEM_HP = #{memHp},  -->
+<!--       MEM_MAIL = #{memMail},  -->
+<!--       MEM_JOB = #{memJob},  -->
+<!--       MEM_LIKE = #{memLike},  -->
+<!--       MEM_MEMORIAL = #{memMemorial},  -->
+<!--       MEM_MEMORIALDAY = #{memMemorialday},  -->
+<!--       MEM_MILEAGE = #{memMileage},  -->
+<!--       MEM_DELETE = #{memDelete} -->
+<!--       WHERE MEM_ID = #{memId} -->
+<!--    </update> -->
+</mapper>

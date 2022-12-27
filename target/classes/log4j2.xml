@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<!-- 어디(where, appender), 어떤 형식(how pattern, layout pattern), 뭘(what, message), 누가(who, logger) -->
+	<!-- appender -->
+	<!-- logger -->
+	<!-- layout -->
+	<!-- lever : 메시지 이벤트 등급, 이벤트 등급에는 경중도가 있다~ debug &lt; info &lt; warn &lt; error &lt; fatal -->
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Logger name="jdbc.sqltiming" level="debug" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="jdbc.resultsettable" level="debug" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<!-- kr.or.ddit가 들어가는 모든 것에 debug레벨 적용 -->
+		<Logger name="kr.or.ddit" level="info" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Root level="error">
+			<AppenderRef ref="Console" />
+		</Root>
+	</Loggers>
+</Configuration>
