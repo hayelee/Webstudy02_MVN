@@ -4,13 +4,16 @@ import java.util.List;
 
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.exception.UserNotFoundException;
+import kr.or.ddit.login.service.AuthenticateService;
+import kr.or.ddit.login.service.AuthenticateServiceImpl;
 import kr.or.ddit.member.dao.MemberDAO;
 import kr.or.ddit.member.dao.MemberDAOImpl;
 import kr.or.ddit.vo.MemberVO;
 
 public class MemberServiceImpl implements MemberService {
 	//dao의존관계 형성 -> 결합력이 최상으로 발생
-	public MemberDAO memberDAO = new MemberDAOImpl();
+	private MemberDAO memberDAO = new MemberDAOImpl();
+	private AuthenticateService authService = new AuthenticateServiceImpl();
 	
 	@Override
 	public ServiceResult createMember(MemberVO member) {
@@ -43,8 +46,16 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public ServiceResult modifyMember(MemberVO member) {
-		// TODO Auto-generated method stub
-		return null;
+		MemberVO inputData = new MemberVO();
+		inputData.setMemId(member.getMemId());
+		inputData.setMemPass(member.getMemPass());
+		
+		ServiceResult result = authService.authenticate(inputData);
+		if(ServiceResult.OK.equals(result)) {
+			int rowcnt = memberDAO.updateMember(member);
+			result = rowcnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;
+		}
+		return result;
 	}
 
 	@Override

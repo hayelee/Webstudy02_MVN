@@ -67,28 +67,25 @@
          , #{memDelete,jdbcType=VARCHAR}
       )
    </insert>
-   
-<!--    <update id="updateMember" parameterType="MemberVO"> -->
-<!--       UPDATE member -->
-<!--       SET -->
-<!--       MEM_PASS = #{memPass},  -->
-<!--       MEM_NAME = #{memName},  -->
-<!--       MEM_REGNO1 = #{memRegno1},  -->
-<!--       MEM_REGNO2 = #{memRegno2},  -->
-<!--       MEM_BIR = #{memBir},  -->
-<!--       MEM_ZIP = #{memZip},  -->
-<!--       MEM_ADD1 = #{memAdd1},  -->
-<!--       MEM_ADD2 = #{memAdd2},  -->
-<!--       MEM_HOMETEL = #{memHometel}, -->
-<!--       MEM_COMTEL = #{memComtel},  -->
-<!--       MEM_HP = #{memHp},  -->
-<!--       MEM_MAIL = #{memMail},  -->
-<!--       MEM_JOB = #{memJob},  -->
-<!--       MEM_LIKE = #{memLike},  -->
-<!--       MEM_MEMORIAL = #{memMemorial},  -->
-<!--       MEM_MEMORIALDAY = #{memMemorialday},  -->
-<!--       MEM_MILEAGE = #{memMileage},  -->
-<!--       MEM_DELETE = #{memDelete} -->
-<!--       WHERE MEM_ID = #{memId} -->
-<!--    </update> -->
+     <update id="updateMember" parameterType="MemberVO">
+      UPDATE MEMBER
+      SET
+         MEM_REGNO1 = #{memRegno1,jdbcType=CHAR}
+         , MEM_REGNO2 = #{memRegno2,jdbcType=CHAR}
+         , MEM_ZIP = #{memZip,jdbcType=CHAR}
+         , MEM_ADD1 = #{memAdd1,jdbcType=VARCHAR}
+         , MEM_ADD2 = #{memAdd2,jdbcType=VARCHAR}
+         , MEM_HOMETEL = #{memHometel,jdbcType=VARCHAR}
+         , MEM_COMTEL = #{memComtel,jdbcType=VARCHAR}
+         , MEM_HP = #{memHp,jdbcType=VARCHAR}
+         , MEM_MAIL = #{memMail,jdbcType=VARCHAR}
+         , MEM_JOB = #{memJob,jdbcType=VARCHAR}
+         , MEM_LIKE = #{memLike,jdbcType=VARCHAR}
+         , MEM_MEMORIAL = #{memMemorial,jdbcType=VARCHAR}
+         , MEM_MEMORIALDAY = TO_DATE(#{memMemorialday,jdbcType=DATE}, 'YYYY-MM-DD')
+      WHERE MEM_ID = #{memId}
+   </update>
+   <delete id="">
+   		
+   </delete>
 </mapper>
