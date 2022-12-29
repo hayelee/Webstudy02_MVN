@@ -60,8 +60,12 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public ServiceResult removeMember(MemberVO member) {
-		// TODO Auto-generated method stub
-		return null;
+		ServiceResult result = authService.authenticate(member); //응집력을 높였을때 장점, 뭔가 바뀌더라도 로직을 건드릴 필요가 없다~
+		if(ServiceResult.OK.equals(result)) {
+			int rowcnt = memberDAO.deleteMember(member.getMemId());
+			result = rowcnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;
+		}
+		return result;
 	}
 
 }

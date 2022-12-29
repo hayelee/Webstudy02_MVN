@@ -40,4 +40,5 @@ public interface MemberDAO {
 	 * @return 삭제된 레코드 수 (rowcnt) > 0 : 성공, <= 0 : 실패
 	 */
 	public int deleteMember(String memId);
+	
 }

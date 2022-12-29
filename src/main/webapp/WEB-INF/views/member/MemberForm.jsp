@@ -16,7 +16,7 @@
 <body>
 	<h4>가입 양식</h4>
 	<form method="post">
-		<table>
+		<table border="1">
 			<tr>
 				<th>회원아이디</th>
 				<td><input class="form-control" type="text" 

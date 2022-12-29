@@ -1,6 +1,7 @@
 package kr.or.ddit.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
@@ -13,6 +14,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.or.ddit.validate.DeleteGroup;
 import kr.or.ddit.validate.InsertGroup;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * VO(Value Object), DTO(Data Transfer Object), Java Bean, Model
@@ -28,11 +35,37 @@ import kr.or.ddit.validate.InsertGroup;
  * 6. 객체 직렬화 가능 (transient를 추가하면 직렬화 하지 않음, @JsonIgnore 추가하면 마샬링 하지 않음)
  * 
  * 회원 관리를 위한 Domain Layer
- * 
+ * 	: 한사람의 회원 정보(구매기록 포함)를 담기 위한 객체.
+ * 	  MEMBER(1) : PROD(N) 한사람이 여러가지 상품을 구매할 수 있다~! -> HAS MANY관계로 표현
+ * 	  1 : 1 -> HAS A 관계
+ * ** 데이터매퍼나 ORM을 이용한 테이블 조인 방법
+ * 	 ex) 회원 정보 상세 조회시 구매 상품 기록을 함께 조회함.
+ * 1. 대상 테이블 선택
+ * 	  MEMBER, CART(CART_MEMBER, CART_PROD), PROD
+ * 2. 각 테이블로부터 데이터를 바인딩할 VO 설계
+ * 	  MemberVO, ProdVO
+ * 3. 각 테이블의 relation을 VO 사이에 has관계로 반영
+ * 		1(main):N -> has masy , MemberVO has many ProdVO(collection)
+ * 		1(main):1 -> has a    , ProdVO has a BuyerVO
+ * 4. resultType 대신 resultMap 으로 바인딩 설정.
+ * 	  has many : collection
+ * 	  has a : association
  */
+//@Getter
+//@Setter
+@ToString(exclude= {"memPass", "memRegno1", "memRegno2"})
+@EqualsAndHashCode(of="memId")
+@Data
+@NoArgsConstructor
 public class MemberVO implements Serializable {
-	//가입할때만 검증
-	//가입할때, 수정할때 검증
+	
+	public MemberVO(@NotBlank(groups = { Default.class, DeleteGroup.class }) String memId,
+			@NotBlank(groups = { Default.class, DeleteGroup.class }) @Size(min = 4, max = 8) String memPass) {
+		super();
+		this.memId = memId;
+		this.memPass = memPass;
+	}
+	
 	@NotBlank(groups= {Default.class, DeleteGroup.class})
 	private String	memId;
     @NotBlank(groups = {Default.class, DeleteGroup.class})
@@ -66,153 +99,9 @@ public class MemberVO implements Serializable {
 	private String memMemorialday;
 	@Min(0)
 	private Integer memMileage;
-	private String	memDelete;
+	private boolean	memDelete; //소문자로 바꾸면 데이터베이스에null값이 있으면 false로 보여줌
+	private int cartCount; // null값을 가지고 있으면 Integer으로 사용~
 	
-	public String getMemId() {
-		return memId;
-	}
-	public void setMemId(String memId) {
-		this.memId = memId;
-	}
-	public String getMemPass() {
-		return memPass;
-	}
-	public void setMemPass(String memPass) {
-		this.memPass = memPass;
-	}
-	public String getMemName() {
-		return memName;
-	}
-	public void setMemName(String memName) {
-		this.memName = memName;
-	}
-	public String getMemRegno1() {
-		return memRegno1;
-	}
-	public void setMemRegno1(String memRegno1) {
-		this.memRegno1 = memRegno1;
-	}
-	public String getMemRegno2() {
-		return memRegno2;
-	}
-	public void setMemRegno2(String memRegno2) {
-		this.memRegno2 = memRegno2;
-	}
-	public String getMemBir() {
-		return memBir;
-	}
-	public void setMemBir(String memBir) {
-		this.memBir = memBir;
-	}
-	public String getMemZip() {
-		return memZip;
-	}
-	public void setMemZip(String memZip) {
-		this.memZip = memZip;
-	}
-	public String getMemAdd1() {
-		return memAdd1;
-	}
-	public void setMemAdd1(String memAdd1) {
-		this.memAdd1 = memAdd1;
-	}
-	public String getMemAdd2() {
-		return memAdd2;
-	}
-	public void setMemAdd2(String memAdd2) {
-		this.memAdd2 = memAdd2;
-	}
-	public String getMemHometel() {
-		return memHometel;
-	}
-	public void setMemHometel(String memHometel) {
-		this.memHometel = memHometel;
-	}
-	public String getMemComtel() {
-		return memComtel;
-	}
-	public void setMemComtel(String memComtel) {
-		this.memComtel = memComtel;
-	}
-	public String getMemHp() {
-		return memHp;
-	}
-	public void setMemHp(String memHp) {
-		this.memHp = memHp;
-	}
-	public String getMemMail() {
-		return memMail;
-	}
-	public void setMemMail(String memMail) {
-		this.memMail = memMail;
-	}
-	public String getMemJob() {
-		return memJob;
-	}
-	public void setMemJob(String memJob) {
-		this.memJob = memJob;
-	}
-	public String getMemLike() {
-		return memLike;
-	}
-	public void setMemLike(String memLike) {
-		this.memLike = memLike;
-	}
-	public String getMemMemorial() {
-		return memMemorial;
-	}
-	public void setMemMemorial(String memMemorial) {
-		this.memMemorial = memMemorial;
-	}
-	public String getMemMemorialday() {
-		return memMemorialday;
-	}
-	public void setMemMemorialday(String memMemorialday) {
-		this.memMemorialday = memMemorialday;
-	}
-	public Integer getMemMileage() {
-		return memMileage;
-	}
-	public void setMemMileage(Integer memMileage) {
-		this.memMileage = memMileage;
-	}
-	public String getMemDelete() {
-		return memDelete;
-	}
-	public void setMemDelete(String memDelete) {
-		this.memDelete = memDelete;
-	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((memId == null) ? 0 : memId.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MemberVO other = (MemberVO) obj;
-		if (memId == null) {
-			if (other.memId != null)
-				return false;
-		} else if (!memId.equals(other.memId))
-			return false;
-		return true;
-	}
-	
-	@Override
-	public String toString() {
-		return "MemberVO [memId=" + memId + ", memName=" + memName + ", memBir=" + memBir + ", memZip=" + memZip
-				+ ", memAdd1=" + memAdd1 + ", memAdd2=" + memAdd2 + ", memHometel=" + memHometel + ", memComtel="
-				+ memComtel + ", memHp=" + memHp + ", memMail=" + memMail + ", memJob=" + memJob + ", memLike="
-				+ memLike + ", memMemorial=" + memMemorial + ", memMemorialday=" + memMemorialday + ", memMileage="
-				+ memMileage + ", memDelete=" + memDelete + "]";
-	}
+	private List<ProdVO> prodList; // 구매기록을 받는다~ has many 관계 (1:N)
 	
 }

@@ -2,6 +2,7 @@ package kr.or.ddit.login.service;
 
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.ProdVO;
 
 /**
  * 인증 처리를 위한 Business Logic Layer

@@ -90,6 +90,7 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.9.4</version>
 		</dependency>
+
 		<!-- Bean validation -->
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
@@ -100,6 +101,14 @@
 			<groupId>org.glassfish</groupId>
 			<artifactId>jakarta.el</artifactId>
 			<version>3.0.3</version>
+		</dependency>
+
+		<!-- Java Bean 규약 지원 -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Marshalling -->
