@@ -12,7 +12,7 @@
       <tr>
          <th>상품아이디</th>
          <td>${prod.prodId}</td>
-      </tr>
+      </tr> 
       <tr>
          <th>상품명</th>
          <td>${prod.prodName}</td>
