@@ -1,15 +1,13 @@
 package kr.or.ddit.member.dao;
 
-import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import kr.or.ddit.memo.dao.MemoDAO;
 import kr.or.ddit.mybatis.MybatisUtils;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PagingVO;
 
 public class MemberDAOImpl implements MemberDAO {
 
@@ -23,14 +21,25 @@ public class MemberDAOImpl implements MemberDAO {
 			sqlSession.commit(); // 트랜잭션 종료 (쿼리를 실행하고 나면 항상 이 과정이 필요해)
 			return rowcnt;
 		}
-
+	}
+	
+	@Override
+	public int selectTotalRecord(PagingVO<MemberVO> pagingVO) {
+		try (
+				SqlSession sqlSession = sqlSessionFactory.openSession();
+			) {
+				MemberDAO mapperProxy = sqlSession.getMapper(MemberDAO.class);
+				return mapperProxy.selectTotalRecord(pagingVO);
+			}
 	}
 
 	@Override
-	public List<MemberVO> selectMemberList() {
-		try (SqlSession sqlSession = sqlSessionFactory.openSession();) {
+	public List<MemberVO> selectMemberList(PagingVO<MemberVO> pagingVO) {
+		try (
+			SqlSession sqlSession = sqlSessionFactory.openSession();
+		) {
 			MemberDAO mapperProxy = sqlSession.getMapper(MemberDAO.class);
-			return mapperProxy.selectMemberList();
+			return mapperProxy.selectMemberList(pagingVO);
 		}
 	}
 

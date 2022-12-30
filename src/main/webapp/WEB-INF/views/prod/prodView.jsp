@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<jsp:include page="/includee/preScript.jsp" />
 </head>
 <body>
    <table>
@@ -21,6 +22,15 @@
          <th>상품분류</th>
          <td>${prod.lprodNm}</td>
       </tr>
+      <c:if test="${sessionScope.authMember eq member }">
+         <tr>
+            <td colspan="2">
+               <a href="<c:url value='/member/memberUpdate.do' />" class="btn btn-primary">수정</a>
+                  <a data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger">탈퇴</a> <!-- 이벤트 직접 처리할 필요X -->
+<!--        	  <a onclick="$('#exampleModal').modal('show');" class="btn btn-danger">탈퇴</a> -->
+            </td>
+         </tr>
+      </c:if>
       <tr>
          <th>거래처</th>
          <td>
@@ -150,5 +160,6 @@
          </td>
       </tr>
    </table>
+   <jsp:include page="/includee/postScript.jsp" />
 </body>
 </html>

@@ -15,7 +15,7 @@
 </c:if>
 </head>
 <body>
-<table border="1">
+<table class="table table-bordered" border="1">
       <tr>
          <th>회원아이디</th>
          <td>${member.memId}</td>
