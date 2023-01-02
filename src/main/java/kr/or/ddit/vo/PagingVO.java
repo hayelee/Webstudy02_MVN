@@ -38,7 +38,12 @@ public class PagingVO<T> {
 	private List<T> dataList;
 	
 	
-	private SearchVO simpleCondition; // 단순 검색용
+	private SearchVO simpleCondition; // 단순 키워드 검색용
+	private T detailCondition; // 상세 검색용
+	
+	public void setDetailCondition(T detailCondition) {
+		this.detailCondition = detailCondition;
+	}
 	
 	public void setSimpleCondition(SearchVO simpleCondition) {
 		this.simpleCondition = simpleCondition;

@@ -1,16 +1,12 @@
 package kr.or.ddit.member.controller;
 
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,28 +15,41 @@ import org.apache.commons.beanutils.BeanUtils;
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.view.InternalResourceViewResolver;
+import kr.or.ddit.mvc.AbstractController;
+import kr.or.ddit.mvc.annotation.RequestMethod;
 import kr.or.ddit.validate.InsertGroup;
 import kr.or.ddit.validate.ValidationUtils;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberInsert.do")
-public class MemberInsertControllerServlet extends HttpServlet {
+/**
+ *  Backend controller(command handler) --> Plain Old Java Object
+ */
+public class MemberInsertController implements AbstractController {
 //	서비스와의 의존관계 코드
 	private MemberService service = new MemberServiceImpl();
 	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String viewName = "member/MemberForm";
+		public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			String method = req.getMethod();
+			RequestMethod requestMethod = RequestMethod.valueOf(method.toUpperCase());
+			String viewName = null;
+			if(requestMethod==RequestMethod.GET) {
+				viewName = memberForm(req, resp);
+			}else if(requestMethod==RequestMethod.POST) {
+				viewName = memberInsert(req, resp);
+			}else {
+				//우리가 처리할 수 없는 요청!
+				resp.sendError(405, method + "는 지원하지 않음.");
+			}
+			return viewName;
+		}
+	
+	public String memberForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		return "member/MemberForm";
 		
-		new InternalResourceViewResolver("/WEB-INF/views/", ".jsp").resolveView(viewName, req, resp);
 	}
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		1. 검증 과정도 포함시키자~
-		req.setCharacterEncoding("UTF-8");
-		
+	public String memberInsert(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// command object - 검증 대상
 		MemberVO member = new MemberVO();
 		// 가입 실패하면 입력한 정보 초기화하지 않고 살려두기~(성공하면 자동 삭제)
@@ -86,7 +95,6 @@ public class MemberInsertControllerServlet extends HttpServlet {
 		}else {
 			viewName = "member/MemberForm";
 		}
-		
-		new InternalResourceViewResolver("/WEB-INF/views/", ".jsp").resolveView(viewName, req, resp);
+		return viewName;
 	}
 }

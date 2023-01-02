@@ -8,13 +8,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/index.do")
-public class IndexControllerServlet extends HttpServlet{
+import kr.or.ddit.mvc.AbstractController;
+
+public class IndexController implements AbstractController {
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setAttribute("contentPage", "/WEB-INF/views/index.jsp");
-		String viewName = "/WEB-INF/views/layout.jsp";
-		req.getRequestDispatcher(viewName).forward(req, resp);
+		return "layout";
 	}
 }

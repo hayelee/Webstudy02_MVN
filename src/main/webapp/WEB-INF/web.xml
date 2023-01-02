@@ -7,4 +7,15 @@
 	<welcome-file-list>
 		<welcome-file>index.do</welcome-file>
 	</welcome-file-list>
+	
+	<servlet>
+		<servlet-name>frontController</servlet-name>
+		<servlet-class>kr.or.ddit.mvc.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>frontController</servlet-name>
+		<url-pattern>*.do</url-pattern>
+		<url-pattern>/index.do</url-pattern>
+	</servlet-mapping>
 </web-app>

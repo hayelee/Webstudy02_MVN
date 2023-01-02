@@ -15,30 +15,30 @@ public class ProdDAOImpl implements ProdDAO {
 	@Override
 	public ProdVO selectProd(String prodId) {
 		try (
-				SqlSession sqlSession = sqlSessionFactory.openSession();
+			SqlSession sqlSession = sqlSessionFactory.openSession();
 		) {
-				ProdDAO mapperProxy = sqlSession.getMapper(ProdDAO.class);
-				return mapperProxy.selectProd(prodId);
+			ProdDAO mapperProxy = sqlSession.getMapper(ProdDAO.class);
+			return mapperProxy.selectProd(prodId);
 		}
 	}
 
 	@Override
 	public int selectTotalRecord(PagingVO<ProdVO> pagingVO) {
 		try (
-				SqlSession sqlSession = sqlSessionFactory.openSession();
-			) {
-				ProdDAO mapperProxy = sqlSession.getMapper(ProdDAO.class);
-				return mapperProxy.selectTotalRecord(pagingVO);
-			}
+			SqlSession sqlSession = sqlSessionFactory.openSession();
+		) {
+			ProdDAO mapperProxy = sqlSession.getMapper(ProdDAO.class);
+			return mapperProxy.selectTotalRecord(pagingVO);
+		}
 	}
 
 	@Override
 	public List<ProdVO> selectProdList(PagingVO<ProdVO> pagingVO) {
 		try (
-				SqlSession sqlSession = sqlSessionFactory.openSession();
+			SqlSession sqlSession = sqlSessionFactory.openSession();
 		) {
-				ProdDAO mapperProxy = sqlSession.getMapper(ProdDAO.class);
-				return mapperProxy.selectProdList(pagingVO);
+			ProdDAO mapperProxy = sqlSession.getMapper(ProdDAO.class);
+			return mapperProxy.selectProdList(pagingVO);
 		}
 	}
 }

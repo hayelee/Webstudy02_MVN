@@ -27,10 +27,12 @@ public class InternalResourceViewResolver implements ViewResolver {
 		if(viewName.startsWith("redirect:")) {
 			viewName = viewName.substring("redirect:".length());
 			resp.sendRedirect(req.getContextPath() + viewName);
+		}else if(viewName.startsWith("forward:")) {
+			viewName = viewName.substring("forward:".length());
+			req.getRequestDispatcher(viewName).forward(req, resp);
 		}else {
 			// 디스패치로 포워딩
 			req.getRequestDispatcher(prefix + viewName + suffix).forward(req, resp);
-			
 		}
 	}
 }

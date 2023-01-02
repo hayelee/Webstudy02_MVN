@@ -25,6 +25,7 @@ public class ProdVO implements Serializable {
 	private BuyerVO buyer; // has a 관계
 	
 	private Integer prodCost;
+	private Integer rnum;
 	private Integer prodPrice;
 	private Integer prodSale;
 	private String prodOutline;
@@ -42,4 +43,6 @@ public class ProdVO implements Serializable {
 	private Integer prodMileage;
 	
 	private Set<MemberVO> memberSet; // has many 관계
+	
+	private int memCount; // 스칼라쿼리는 굳이 has 관계 필요 없어!
 }

@@ -16,6 +16,7 @@ import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.exception.UserNotFoundException;
 import kr.or.ddit.login.service.AuthenticateService;
 import kr.or.ddit.login.service.AuthenticateServiceImpl;
+import kr.or.ddit.mvc.AbstractController;
 import kr.or.ddit.vo.MemberVO;
 
 /**
@@ -25,17 +26,16 @@ import kr.or.ddit.vo.MemberVO;
  *   - 이전에 입력받은 아이디의 상태를 유지함.
  * 3. 인증 완료시에 웰컴 페이지로 이동함.
  */
-@WebServlet("/login/loginProcess.do")
-public class LoginProcessControllerServlet extends HttpServlet {
+public class LoginProcessController implements AbstractController {
    private AuthenticateService service = new AuthenticateServiceImpl();
    
-   @Override
-   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+   
+   public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //      1. 
       HttpSession session = req.getSession();
       if(session.isNew()) {
          resp.sendError(400, "로그인 폼이 없는데 어떻게 로그인을 하지???");
-         return;
+         return null;
       }
       String memId = req.getParameter("memId");
       String memPass = req.getParameter("memPass");
@@ -80,12 +80,7 @@ public class LoginProcessControllerServlet extends HttpServlet {
       
       }
 //      5.
-      if(viewName.startsWith("redirect:")) {
-         viewName = viewName.substring("redirect:".length());
-         resp.sendRedirect(req.getContextPath() + viewName);
-      }else {
-         req.getRequestDispatcher(viewName).forward(req, resp);
-      }
+      return viewName;
       
    }
 

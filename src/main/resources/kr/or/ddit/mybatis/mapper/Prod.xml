@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.prod.dao.ProdDAO">
+	<sql id="searchFrag">
+		<trim prefix=" WHERE " prefixOverrides="AND">
+			<if test="detailCondition neq null">
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(detailCondition.prodLgu)">
+					AND PROD_LGU = #{detailCondition.prodLgu}
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(detailCondition.prodBuyer)">
+					AND PROD_BUYER = #{detailCondition.prodBuyer}
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(detailCondition.prodName)">
+					AND INSTR(PROD_NAME, #{detailCondition.prodName}) > 0
+				</if>
+			</if>
+		</trim>
+	</sql>
+	<select id="selectTotalRecord" parameterType="PagingVO" resultType="int">
+		SELECT COUNT(*)
+		FROM PRODVIEW
+		<include refid="searchFrag" />
+	</select>
+<!-- 	<resultMap type="ProdVO" id="ListMap" autoMapping="true"> -->
+<!-- 		<association property="buyer" javaType="BuyerVO"> -->
+<!-- 			<result property="buyerName" column="BUYER_NAME"/> -->
+<!-- 		</association> -->
+<!-- 	</resultMap> -->
+	<select id="selectProdList" parameterType="PagingVO" resultType="ProdVO"> 
+		WITH ORDERDPROD AS (
+			SELECT PROD_ID, PROD_NAME, PROD_COST, PROD_PRICE
+			    , LPROD_NM
+			    , BUYER_NAME "buyer.buyerName"
+			    , (
+			        SELECT COUNT(DISTINCT CART_MEMBER) FROM CART
+			        WHERE CART_PROD = PROD_ID
+			    ) MEM_COUTN
+			FROM PRODVIEW
+			<include refid="searchFrag" />
+			ORDER BY PROD_LGU, ROWID DESC <!-- 검색은 가장 원천테이블로 해야함 -->
+		)
+		SELECT A.*
+		FROM(
+		    SELECT ROWNUM RNUM, ORDERDPROD.* 
+		    FROM ORDERDPROD
+		) A
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
 	 <!-- 중첩map방식 -->
 	 <resultMap type="ProdVO" id="prodMap" autoMapping="true">
 	 		<id property="prodId" column="PROD_ID"/>

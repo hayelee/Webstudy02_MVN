@@ -1,4 +1,4 @@
-package kr.or.ddit.prod.controller;
+package kr.or.ddit.member.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,46 +11,45 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.ctc.wstx.util.StringUtil;
+
+import kr.or.ddit.member.service.MemberService;
+import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.AbstractController;
 import kr.or.ddit.mvc.view.InternalResourceViewResolver;
-import kr.or.ddit.prod.service.ProdService;
-import kr.or.ddit.prod.service.ProdServiceImpl;
+import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.PagingVO;
-import kr.or.ddit.vo.ProdVO;
 import kr.or.ddit.vo.SearchVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@WebServlet("/prod/prodList.do")
-public class ProdListControllerServlet extends HttpServlet {
-	private ProdService service = new ProdServiceImpl();
-	
+public class MemberListController implements AbstractController {
+	private MemberService service = new MemberServiceImpl();
+
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
-		
+	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
 		String pageParam = req.getParameter("page");
 		String searchType = req.getParameter("searchType");
 		String searchWord = req.getParameter("searchWord");
 		
 		SearchVO simpleCondition = new SearchVO(searchType, searchWord);
-	
+		
 		int currentPage = 1;
 		if(StringUtils.isNumeric(pageParam)){
 			currentPage = Integer.parseInt(pageParam);
 		}
 		
-		PagingVO<ProdVO> pagingVO = new PagingVO<>(4,2);
+		PagingVO<MemberVO> pagingVO = new PagingVO<>(4,2);
 		pagingVO.setCurrentPage(currentPage);// 첫번째 setter 호출
 		pagingVO.setSimpleCondition(simpleCondition);
 		
-		List<ProdVO> prodList = service.retrieveProdList(pagingVO);
+		List<MemberVO> memberList = service.retrieveMemberList(pagingVO); // 받아올 필요 없어! service에서 다 받아놨으니까!
 		req.setAttribute("pagingVO", pagingVO);
 		
 		log.info("paging data : {}", pagingVO);
 		
 		String viewName = "member/memberList";
-
-		
-		new InternalResourceViewResolver("/WEB-INF/views/", ".jsp").resolveView(viewName, req, resp);
+		return viewName;
 	}
 }
