@@ -3,9 +3,7 @@ package kr.or.ddit.login.controller;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -16,7 +14,9 @@ import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.exception.UserNotFoundException;
 import kr.or.ddit.login.service.AuthenticateService;
 import kr.or.ddit.login.service.AuthenticateServiceImpl;
-import kr.or.ddit.mvc.AbstractController;
+import kr.or.ddit.mvc.annotation.RequestMethod;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.vo.MemberVO;
 
 /**
@@ -26,13 +26,13 @@ import kr.or.ddit.vo.MemberVO;
  *   - 이전에 입력받은 아이디의 상태를 유지함.
  * 3. 인증 완료시에 웰컴 페이지로 이동함.
  */
-public class LoginProcessController implements AbstractController {
+@Controller
+public class LoginProcessController {
    private AuthenticateService service = new AuthenticateServiceImpl();
    
-   
-   public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+   @RequestMapping(value="/login/loginProcess.do", method=RequestMethod.POST)
+   public String process(HttpSession session, HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException {
 //      1. 
-      HttpSession session = req.getSession();
       if(session.isNew()) {
          resp.sendError(400, "로그인 폼이 없는데 어떻게 로그인을 하지???");
          return null;

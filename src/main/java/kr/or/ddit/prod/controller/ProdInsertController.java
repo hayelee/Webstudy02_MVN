@@ -1,4 +1,4 @@
-package kr.or.ddit.commons;
+package kr.or.ddit.prod.controller;
 
 import java.io.IOException;
 
@@ -10,11 +10,12 @@ import kr.or.ddit.mvc.annotation.stereotype.Controller;
 import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 
 @Controller
-public class IndexController {
+public class ProdInsertController {
 
-	@RequestMapping("/index.do")
-	public String process(HttpServletRequest req) {
-		req.setAttribute("contentPage", "/WEB-INF/views/index.jsp");
-		return "layout";
+	@RequestMapping("/prod/prodInsert.do")
+	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		return "prod/prodForm";
 	}
+
 }

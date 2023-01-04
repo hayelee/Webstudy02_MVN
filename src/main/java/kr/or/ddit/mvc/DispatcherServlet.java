@@ -8,22 +8,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kr.or.ddit.commons.IndexController;
-import kr.or.ddit.login.controller.LoginProcessController;
-import kr.or.ddit.login.controller.LogoutController;
-import kr.or.ddit.member.controller.MemberInsertController;
-import kr.or.ddit.member.controller.MemberListController;
-import kr.or.ddit.member.controller.MemberViewController;
+import kr.or.ddit.mvc.annotation.HandlerAdapter;
+import kr.or.ddit.mvc.annotation.HandlerMapping;
+import kr.or.ddit.mvc.annotation.RequestMappingHandlerAdapter;
+import kr.or.ddit.mvc.annotation.RequestMappingHandlerMapping;
+import kr.or.ddit.mvc.annotation.RequestMappingInfo;
 import kr.or.ddit.mvc.view.InternalResourceViewResolver;
 import kr.or.ddit.mvc.view.ViewResolver;
-import kr.or.ddit.prod.controller.ProdListController;
 
 public class DispatcherServlet extends HttpServlet{
+	// 실제 작업은 얘네가 다해!
 	private ViewResolver viewResolver;
+	private HandlerMapping handlerMapping;
+	private HandlerAdapter handlerAdapter;
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		viewResolver = new InternalResourceViewResolver("/WEB-INF/views/", ".jsp");
+		handlerMapping = new RequestMappingHandlerMapping("kr.or.ddit");
+		handlerAdapter = new RequestMappingHandlerAdapter();
 	}
 	
 	@Override
@@ -35,30 +38,33 @@ public class DispatcherServlet extends HttpServlet{
 //		requestURI = requestURI.substring(req.getContextPath().length());
 		String requestURI = req.getServletPath();
 		
-		AbstractController controller = null;
-		if("/member/memberList.do".equals(requestURI)) {
-			controller = new MemberListController();
-		}else if("/prod/prodList.do".equals(requestURI)) {
-			controller = new ProdListController();
-		}else if("/member/memberView.do".equals(requestURI)) {
-			controller = new MemberViewController();
-		}else if("/index.do".equals(requestURI)) {
-			controller = new IndexController();
-		}else if("/member/memberInsert.do".equals(requestURI)) {
-			controller = new MemberInsertController();
-		}else if("/login/loginProcess.do".equals(requestURI)) {
-			controller = new LoginProcessController();
-		}else if("/login/logout.do".equals(requestURI)) {
-			controller = new LogoutController();
-		}
+		RequestMappingInfo mappingInfo = handlerMapping.findCommandHandler(req); // 다 가지고 있어!
 		
-		if(controller==null) {
+		// 이만큼을HandlerMapping이 가져갔다! 책임을 쪼갰어요~
+//		AbstractController controller = null;
+//		else if("/prod/prodList.do".equals(requestURI)) {
+//			controller = new ProdListController();
+//		}else if("/member/memberView.do".equals(requestURI)) {
+//			controller = new MemberViewController();
+//		}else if("/index.do".equals(requestURI)) {
+//			controller = new IndexController();
+//		}else if("/login/loginProcess.do".equals(requestURI)) {
+//			controller = new LoginProcessController();
+//		}else if("/login/logout.do".equals(requestURI)) {
+//			controller = new LogoutController();
+//		}else if("/prod/prodInsert.do".equals(requestURI)) {
+//			controller = new ProdInsertController();
+//		}
+		
+		if(mappingInfo==null) {
 			// 우리가 처리할 수 없는 요청입니다~! 상태코드 404
 			resp.sendError(404, requestURI+"는 처리할 수 없는 자원임(Not found).");
 			return;
 		}
 		
-		String viewName = controller.process(req, resp);
+//		String viewName = controller.process(req, resp);
+		String viewName = handlerAdapter.invokeHandler(mappingInfo, req, resp);
+		
 		if(viewName==null) {
 			// 개발자가 잘못만들어 준 거니까 500~
 			if(!resp.isCommitted())

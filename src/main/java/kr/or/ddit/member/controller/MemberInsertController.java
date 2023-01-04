@@ -15,8 +15,10 @@ import org.apache.commons.beanutils.BeanUtils;
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.AbstractController;
 import kr.or.ddit.mvc.annotation.RequestMethod;
+import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.validate.InsertGroup;
 import kr.or.ddit.validate.ValidationUtils;
 import kr.or.ddit.vo.MemberVO;
@@ -24,46 +26,22 @@ import kr.or.ddit.vo.MemberVO;
 /**
  *  Backend controller(command handler) --> Plain Old Java Object
  */
-public class MemberInsertController implements AbstractController {
+@Controller
+public class MemberInsertController {
 //	서비스와의 의존관계 코드
 	private MemberService service = new MemberServiceImpl();
 	
-	@Override
-		public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			String method = req.getMethod();
-			RequestMethod requestMethod = RequestMethod.valueOf(method.toUpperCase());
-			String viewName = null;
-			if(requestMethod==RequestMethod.GET) {
-				viewName = memberForm(req, resp);
-			}else if(requestMethod==RequestMethod.POST) {
-				viewName = memberInsert(req, resp);
-			}else {
-				//우리가 처리할 수 없는 요청!
-				resp.sendError(405, method + "는 지원하지 않음.");
-			}
-			return viewName;
-		}
-	
-	public String memberForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@RequestMapping("/member/memberInsert.do")
+	public String memberForm() {
 		return "member/MemberForm";
 		
 	}
 	
-	public String memberInsert(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// command object - 검증 대상
-		MemberVO member = new MemberVO();
-		// 가입 실패하면 입력한 정보 초기화하지 않고 살려두기~(성공하면 자동 삭제)
-		req.setAttribute("member", member); 
-		
-//		member.setMemId(req.getParameter("memId"));
-		
-		Map<String, String[]> parameterMap = req.getParameterMap();
-		
-		try {
-			BeanUtils.populate(member, parameterMap); // set어쩌고 10몇줄 안써도 됨~
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new ServletException(e);
-		}
+	@RequestMapping(value="/member/memberInsert.do", method=RequestMethod.POST) // 이 주소로 받은 것 중에 post요청반 받을 수 있다!
+	public String memberInsert(
+		HttpServletRequest req
+		, @ModelAttribute("member") MemberVO member
+	) throws ServletException {
 		
 		// 여기서 검증~
 		Map<String, List<String>> errors = new LinkedHashMap<>();
