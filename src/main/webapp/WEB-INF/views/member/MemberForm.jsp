@@ -16,7 +16,7 @@
 <body>
 	<h4>가입 양식</h4>
 	<form method="post">
-		<table border="1">
+		<table class="table table-bordered">
 			<tr>
 				<th>회원아이디</th>
 				<td><input class="form-control" type="text" 
@@ -118,7 +118,8 @@
 					value="${member.memDelete}" /><span class="text-danger">${errors.memDelete}</span></td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="submit" value="저장" /></td>
+				<td colspan="2"><input type="submit" class="btn btn-success"
+					value="저장"></td>
 			</tr>
 		</table>
 	</form>

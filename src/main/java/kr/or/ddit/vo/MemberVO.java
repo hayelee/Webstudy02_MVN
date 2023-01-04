@@ -106,4 +106,6 @@ public class MemberVO implements Serializable {
 	
 	private List<ProdVO> prodList; // 구매기록을 받는다~ has many 관계 (1:N)
 	
+	private String memRole;
+	
 }

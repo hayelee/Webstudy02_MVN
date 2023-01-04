@@ -25,4 +25,20 @@ public interface ProdDAO {
 	 * @return
 	 */
 	public List<ProdVO> selectProdList(PagingVO<ProdVO> pagingVO);
+	
+	/**
+	 * 신규 상품 등록
+	 * @param prod
+	 * @return 등록된 상품 수
+	 */
+	public int insertProd(ProdVO prod);
+	
+	/** 상품 수정
+	 * @param prod
+	 * @return 수정된 상품 수
+	 */
+	public int updateProd(ProdVO prod);
+	
+	
+//	public int deleteProd(String prodId);
 }

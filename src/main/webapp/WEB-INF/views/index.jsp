@@ -3,7 +3,8 @@
 <h4>WELCOME</h4>
 <c:choose>
 	<c:when test="${not empty sessionScope.authMember }">
-		<a href="<c:url value='/mypage.do'/>">${authMember.memName }님</a>
+		<h4>로그인 된 사용자??? : <%=request.getUserPrincipal() %></h4>
+		<a href="<c:url value='/mypage.do'/>">${authMember.memName }[${authMember.memRole}]님</a>
 		<form name="logoutForm" action="<c:url value='/login/logout.do'/>" method="post"></form>
 		<a href="#" class="logoutBtn"> 로그아웃</a>
 		<script>

@@ -75,4 +75,93 @@
 		FROM PRODVIEW LEFT OUTER JOIN CARTVIEW ON (PROD_ID = CART_PROD)
 		WHERE PROD_ID = #{prodId}
 	</select>
+	
+	<insert id="insertProd" parameterType="ProdVO">
+	<!-- insert보다 먼저 실행할지 나중에 실행할지 결정 가능 -->
+	<selectKey order="BEFORE" resultType="string" keyProperty="prodId"><!-- keyProperty를 보고 setprodId가 호출됨 -->
+		 SELECT #{prodLgu,jdbcType=CHAR} || 
+        	 LPAD((NVL(TO_NUMBER(SUBSTR(MAX(PROD_ID),5)),0)+1),6,'0')
+         FROM PROD
+         WHERE PROD_LGU = #{prodLgu,jdbcType=CHAR}
+	</selectKey>
+	INSERT INTO PROD(
+          PROD_ID
+          , PROD_NAME
+          , PROD_LGU
+          , PROD_BUYER
+          , PROD_COST
+          
+          , PROD_PRICE
+          , PROD_SALE
+          , PROD_OUTLINE
+          , PROD_DETAIL
+          , PROD_IMG
+          
+          , PROD_TOTALSTOCK
+          , PROD_INSDATE
+          , PROD_PROPERSTOCK
+          , PROD_SIZE
+          , PROD_COLOR
+          
+          , PROD_DELIVERY
+          , PROD_UNIT
+          , PROD_QTYIN
+          , PROD_QTYSALE
+          , PROD_MILEAGE
+      )VALUES(
+      	#{prodId}
+<!--       SELECT #{prodLgu,jdbcType=CHAR} ||  -->
+<!--          LPAD((NVL(TO_NUMBER(SUBSTR(MAX(PROD_ID),5)),0)+1),6,'0') -->
+         , #{prodName,jdbcType=VARCHAR}
+         , #{prodLgu,jdbcType=CHAR}
+         , #{prodBuyer,jdbcType=CHAR}
+         , #{prodCost,jdbcType=NUMERIC}
+         
+         , #{prodPrice,jdbcType=NUMERIC}
+         , #{prodSale,jdbcType=NUMERIC}
+         , #{prodOutline,jdbcType=VARCHAR}
+         , #{prodDetail,jdbcType=CLOB}
+         , #{prodImg,jdbcType=VARCHAR}
+         
+         , #{prodTotalstock,jdbcType=NUMERIC}
+         , #{prodInsdate,jdbcType=DATE}
+         , #{prodProperstock,jdbcType=NUMERIC}
+         , #{prodSize,jdbcType=VARCHAR}
+         , #{prodColor,jdbcType=VARCHAR}
+         
+         , #{prodDelivery,jdbcType=VARCHAR}
+         , #{prodUnit,jdbcType=VARCHAR}
+         , #{prodQtyin,jdbcType=NUMERIC}
+         , #{prodQtysale,jdbcType=NUMERIC}
+         , #{prodMileage,jdbcType=NUMERIC}
+      )
+<!--       FROM PROD -->
+<!--         WHERE PROD_LGU = #{prodLgu,jdbcType=CHAR} -->
+	</insert>
+	<update id="updateProd" parameterType="ProdVO">
+	UPDATE PROD
+    SET
+    	prod_name = #{prodName,jdbcType=VARCHAR}
+	    , prod_lgu = #{prodLgu,jdbcType=CHAR}
+	    , prod_buyer = #{prodBuyer,jdbcType=CHAR}
+	    , prod_cost = #{prodCost,jdbcType=NUMERIC}
+	    , prod_price = #{prodPrice,jdbcType=NUMERIC}
+	    , prod_sale = #{prodSale,jdbcType=NUMERIC}
+	    , prod_outline = #{prodOutline,jdbcType=VARCHAR}
+	    , prod_detail = #{prodDetail,jdbcType=CLOB}
+	    , prod_img = #{prodImg,jdbcType=VARCHAR}
+	    , prod_totalstock = #{prodTotalstock,jdbcType=NUMERIC}
+	    , prod_insdate = #{prodInsdate,jdbcType=DATE}
+	    , prod_properstock = #{prodProperstock,jdbcType=NUMERIC}
+	    , prod_size = #{prodSize,jdbcType=VARCHAR}
+	    , prod_color = #{prodColor,jdbcType=VARCHAR}
+	    , prod_delivery = #{prodDelivery,jdbcType=VARCHAR}
+	    , prod_unit = #{prodUnit,jdbcType=VARCHAR}
+	    , prod_qtyin = #{prodQtyin,jdbcType=NUMERIC}
+	    , prod_qtysale = #{prodQtysale,jdbcType=NUMERIC}
+	    , prod_mileage = #{prodMileage,jdbcType=NUMERIC}
+	WHERE
+    	PROD_ID = #{prodId}
+   
+	</update>
 </mapper>

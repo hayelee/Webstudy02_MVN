@@ -1,40 +1,37 @@
 package kr.or.ddit.member.controller;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.beanutils.BeanUtils;
 
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.view.InternalResourceViewResolver;
+import kr.or.ddit.mvc.annotation.RequestMethod;
+import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.validate.UpdateGroup;
 import kr.or.ddit.validate.ValidationUtils;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberUpdate.do")
-public class MemberUpdateControllerServlet extends HttpServlet {
+@Controller
+public class MemberUpdateController {
 //	서비스와의 의존관계 코드
 	private MemberService service = new MemberServiceImpl();
 	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		//누구라는 정보와 누구의 상세정보, 그것을 전달할 정보 필요
-//		1.
-		req.setCharacterEncoding("UTF-8");
-		
-		HttpSession session = req.getSession();
+	@RequestMapping("/member/memberUpdate.do")
+	public String updateForm(
+			HttpSession session
+//			, @SessionAttribute("authMember") MemberVO authMember // 나중에 resolver만들어보기~
+			, HttpServletRequest req, HttpServletResponse resp
+	) {
 		MemberVO authMember = (MemberVO) session.getAttribute("authMember");
 		
 		// 상세조회
@@ -43,25 +40,15 @@ public class MemberUpdateControllerServlet extends HttpServlet {
 		// 모델로 공유
 		req.setAttribute("member", member);
 		
-		String viewName = "member/MemberForm";
-		
-		new InternalResourceViewResolver("/WEB-INF/views/", ".jsp").resolveView(viewName, req, resp);
+		return "member/MemberForm";
 		
 	}
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		1.
-		req.setCharacterEncoding("UTF-8");
-		
-		// 회원 정보를 담을 그릇~
-		MemberVO member = new MemberVO();
-		req.setAttribute("member", member);
-		try {
-			BeanUtils.populate(member, req.getParameterMap()); // set어쩌고 10몇줄 안써도 됨~
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new ServletException(e);
-		}
+	@RequestMapping(value="/member/memberUpdate.do", method=RequestMethod.POST)
+	public String updateProcess(
+			@ModelAttribute("member") MemberVO member //필요한 파라미터 다 넣어줌
+			, HttpServletRequest req
+		){
 		
 		String viewName = null;
 		
@@ -92,7 +79,6 @@ public class MemberUpdateControllerServlet extends HttpServlet {
 			viewName = "member/MemberForm";	
 		}
 		
-		
-		new InternalResourceViewResolver("/WEB-INF/views/", ".jsp").resolveView(viewName, req, resp);
+		return viewName;
 	}
 }

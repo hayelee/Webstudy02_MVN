@@ -4,9 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,42 +15,48 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import kr.or.ddit.memo.dao.MemoDAO;
 import kr.or.ddit.memo.dao.MemoDAOImpl;
+import kr.or.ddit.mvc.annotation.RequestMethod;
+import kr.or.ddit.mvc.annotation.resolvers.RequestParam;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.vo.MemoVO;
 
-@WebServlet("/memo")
-public class MemoControllerServlet extends HttpServlet{
-   private static final Logger log = LoggerFactory.getLogger(MemoControllerServlet.class);
+@Controller
+public class MemoController {
+   private static final Logger log = LoggerFactory.getLogger(MemoController.class);
    
 //   private MemoDAO dao = FileSystemMemoDAOImpl.getInstance(); 
 //   private MemoDAO dao = DataBaseMemoDAOImpl.getInstance(); //구현체 만들기
    //하드코딩 되어있으므로 결합력 늘어난다. (private MemoDAO dao; <-이렇게 쓰려면 컨테이너 필요: Spring)
    private MemoDAO dao = new MemoDAOImpl();
    
-   @Override
-   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+   @RequestMapping("/memo")
+   public String doGet(
+//		@RequestHeader("Accept") String accept
+		HttpServletRequest req, HttpServletResponse resp
+	) throws IOException {
       String accept = req.getHeader("Accept");
       log.info("accept header : {}", accept); // +, string format쓰지 않고도 원하는 형태 사용 가능
       if(accept.contains("xml")) {
          resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
-         return;
+         return null;
       }
-      
       //2.모델확보
       List<MemoVO> memoList = dao.selectMemoList();
       //3.모델공유
       req.setAttribute("memoList", memoList);
-      String viewName = "/jsonView.do";
-      req.getRequestDispatcher(viewName).forward(req, resp);
+      return "forward:/jsonView.do";
    }
    
-   @Override
-   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//      Post-Redirect-Get : PRG pattern
-      req.setCharacterEncoding("UTF-8");
+   @RequestMapping(value="/memo", method=RequestMethod.POST)
+   public String memo(
+		   HttpServletRequest req
+	) throws IOException {
       
       MemoVO memo = getMemoFromRequest(req);
       dao.insertMemo(memo);
-      resp.sendRedirect(req.getContextPath()+"/memo");
+      
+	return "redirect:/memo";
    }
    
    private MemoVO getMemoFromRequest(HttpServletRequest req) throws IOException {
@@ -86,13 +89,13 @@ public class MemoControllerServlet extends HttpServlet{
       return memo;
    }
 
-   @Override
-   protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-   }
-   
-   @Override
-   protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-   }
+//   @RequestMapping(value="/memo", method=RequestMethod.PUT)
+//   protected void doPut(HttpServletRequest req) throws ServletException, IOException {
+//	   return null;
+//   }
+//   
+//   @RequestMapping(value="/memo", method=RequestMethod.DELET)
+//   protected void doDelete(HttpServletRequest req) throws ServletException, IOException {
+//	   return null;
+//   }
 }
