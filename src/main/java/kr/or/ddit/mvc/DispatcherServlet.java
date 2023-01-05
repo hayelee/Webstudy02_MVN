@@ -32,7 +32,7 @@ public class DispatcherServlet extends HttpServlet{
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 정문에 웨이터 세우는거~! 정문의 웨이터가 실질적인 주문을 받지 않기 때문에 do계열의 메소드 필요 없어요~
-		req.setCharacterEncoding("UTF-8");
+
 		
 //		String requestURI = req.getRequestURI(); //contextPath가 포함되어 있다~
 //		requestURI = requestURI.substring(req.getContextPath().length());
