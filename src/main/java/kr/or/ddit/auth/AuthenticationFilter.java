@@ -2,6 +2,7 @@ package kr.or.ddit.auth;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -30,6 +31,7 @@ public class AuthenticationFilter implements Filter {
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		
 		securedResources = new LinkedHashMap<>();
 		filterConfig.getServletContext().setAttribute(SECUREDNAME, securedResources);
 		String filePath = filterConfig.getInitParameter("filePath");
@@ -62,11 +64,13 @@ public class AuthenticationFilter implements Filter {
 		String uri = req.getServletPath();
 		
 		boolean pass = true;
+		
 //		보호자원인지 여부 판단
 		if(securedResources.containsKey(uri)) {
+			Principal principal = req.getUserPrincipal();
 //			신원확인
-			Object authMember = req.getSession().getAttribute("authMember");
-			if(authMember == null) {
+//			Object authMember = req.getSession().getAttribute("authMember");
+			if(principal == null) {
 //				이 케이스는 통과 되면 안됨(pass만 결정하자)
 				pass = false;
 			}

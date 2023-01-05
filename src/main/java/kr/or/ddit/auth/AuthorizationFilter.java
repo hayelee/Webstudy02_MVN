@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.MemberVOWrapper;
 
 /**
  * 보호 자원에 대한 요청인 경우,
@@ -38,7 +39,7 @@ public class AuthorizationFilter implements Filter {
 		Map<String, String[]> securedResources = (Map)applecation.getAttribute(AuthenticationFilter.SECUREDNAME);
 		HttpServletResponse resp = (HttpServletResponse) response;
 		HttpServletRequest req = (HttpServletRequest) request;
-		HttpSession session = req.getSession();
+//		HttpSession session = req.getSession();
 		
 		boolean pass = true;
 		
@@ -46,7 +47,9 @@ public class AuthorizationFilter implements Filter {
 		
 		if(securedResources.containsKey(uri)) {
 			String[] resRoles = securedResources.get(uri);
-			MemberVO authMember = (MemberVO) session.getAttribute("authMember"); // 정상적인 인증 시스템이 아니야~ 톰캣을 속이는중~
+//			MemberVO authMember = (MemberVO) session.getAttribute("authMember"); // 정상적인 인증 시스템이 아니야~ 톰캣을 속이는중~
+			MemberVOWrapper principal = (MemberVOWrapper) req.getUserPrincipal();
+			MemberVO authMember = principal.getRealMember();
 			String memRole = authMember.getMemRole();
 			pass = Arrays.stream(resRoles)
 							.anyMatch(ele->ele.equals(memRole)); // resRoles가 가지고 있는 엘리먼트 하나씩 비교

@@ -30,8 +30,8 @@ import kr.or.ddit.vo.MemberVO;
 public class LoginProcessController {
    private AuthenticateService service = new AuthenticateServiceImpl();
    
-   @RequestMapping(value="/login/loginProcess.do", method=RequestMethod.POST)
-   public String process(HttpSession session, HttpServletRequest req,HttpServletResponse resp) throws ServletException, IOException {
+   @RequestMapping(value="/login/loginProcess.do",method=RequestMethod.POST)
+   public String login(HttpSession session,HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //      1. 
       if(session.isNew()) {
          resp.sendError(400, "로그인 폼이 없는데 어떻게 로그인을 하지???");
@@ -48,38 +48,40 @@ public class LoginProcessController {
       String viewName = null;
       
       if(valid) {
-    	  try {
-	         ServiceResult result = service.authenticate(member);
-	//         2.
-	         if(ServiceResult.OK.equals(result)) {
-	            Cookie savedIdCookie = new Cookie("saveId", member.getMemId());
-	//            ex) www[blog].naver.com
-	            savedIdCookie.setDomain("localhost");
-	            savedIdCookie.setPath(req.getContextPath());
-	            int maxAge = 0;
-	            if(StringUtils.isNotBlank(saveId)){
-	               maxAge = 60*60*24*5;
-	            }
-	            savedIdCookie.setMaxAge(maxAge);
-	            resp.addCookie(savedIdCookie);
-	            session.setAttribute("authMember", member);
-	            viewName = "redirect:/";
-	         }else {
-	            session.setAttribute("validId", memId);
-	            session.setAttribute("message", "비밀번호 오류");
-	            viewName = "redirect:/login/loginForm.jsp";
-	         }
-	         
-	      }catch(UserNotFoundException e) {
-	    	  session.setAttribute("message", "존재하지 않는 회원입니다.");
-	    	  viewName = "redirect:/login/loginForm.jsp";
-	      }
+         try {
+            ServiceResult result = service.authenticate(member);
+   //         2.
+            if(ServiceResult.OK.equals(result)) {
+              
+               Cookie savedIdCookie = new Cookie("saveId", member.getMemId());
+   //            ex) www[blog].naver.com
+               savedIdCookie.setDomain("localhost");
+               savedIdCookie.setPath(req.getContextPath());
+               int maxAge = 0;
+               if(StringUtils.isNotBlank(saveId)){
+                  maxAge = 60*60*24*5;
+               }
+               savedIdCookie.setMaxAge(maxAge);
+               resp.addCookie(savedIdCookie);
+               session.setAttribute("authMember", member);
+               viewName = "redirect:/";
+            }else {
+               session.setAttribute("validId", memId);
+               session.setAttribute("message", "비밀번호 오류");
+               viewName = "redirect:/login/loginForm.jsp";
+            }
+         } catch (UserNotFoundException e) {
+            session.setAttribute("message", "존재하지 않는 회원입니다.");
+            viewName = "redirect:/login/loginForm.jsp";
+         }
+         
       }else {
-    	  session.setAttribute("message", "아이디나 비밀번호 누락");
-    	  viewName = "redirect:/login/loginForm.jsp";
-      
+         session.setAttribute("message", "아이디나 비밀번호 누락");
+         viewName = "redirect:/login/loginForm.jsp";
       }
+      
 //      5.
+      
       return viewName;
       
    }

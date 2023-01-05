@@ -30,7 +30,7 @@ public class CookieHttpServletRequestWrapper extends HttpServletRequestWrapper {
       return cookieMap.get(name);
    }
    
-   public String getCookieValue(String name) {
+   public String getCookieValue(String name) { // 원본메소드가 가지고 있지 않은 것들 추가
       Cookie finded = getCookie(name);
       return Optional.ofNullable(finded)
             .map(cookie-> {
