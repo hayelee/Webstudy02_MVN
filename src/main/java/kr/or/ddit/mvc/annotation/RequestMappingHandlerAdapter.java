@@ -14,6 +14,7 @@ import kr.or.ddit.mvc.annotation.resolvers.HandlerMethodArgumentResolver;
 import kr.or.ddit.mvc.annotation.resolvers.ModelAttributeMethodProcessor;
 import kr.or.ddit.mvc.annotation.resolvers.RequestParamMethodArgumentResolver;
 import kr.or.ddit.mvc.annotation.resolvers.RequestParamMethodArgumentResolver.BadRequestException;
+import kr.or.ddit.mvc.annotation.resolvers.RequestPartMethodArgumentResolver;
 import kr.or.ddit.mvc.annotation.resolvers.ServletRequestMethodArgumentResolver;
 import kr.or.ddit.mvc.annotation.resolvers.ServletResponseMethodArgumentResolver;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class RequestMappingHandlerAdapter implements HandlerAdapter {
 		argumentResolvers.add(new ServletResponseMethodArgumentResolver());
 		argumentResolvers.add(new RequestParamMethodArgumentResolver());
 		argumentResolvers.add(new ModelAttributeMethodProcessor());
+		argumentResolvers.add(new RequestPartMethodArgumentResolver());
 	}
 	
 	// 갖고있는 resolver가 여러개일때 선택하는 작업을 여기서 해요~

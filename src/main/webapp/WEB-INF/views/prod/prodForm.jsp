@@ -13,8 +13,8 @@
 </head>
 <body>
 	<h4>상품 입력</h4>
-	<form method="post">
-		<table border="1">
+	<form method="post" enctype="multipart/form-data">
+		<table class="table table-bordered">
 			<tr>
 				<th>상품아이디</th>
 				<td><input class="form-control" type="text" readonly
@@ -85,8 +85,11 @@
 			</tr>
 			<tr>
 				<th>상품이미지</th>
-				<td><input class="form-control" type="text" 
-					name="prodImg" value="${prod.prodImg}" /><span class="text-danger">${errors.prodImg}</span></td>
+				<td>
+					<input type="file" name="prodImage" accept="image/*"/>
+					
+					<span class="text-danger">${errors.prodImg }</span>
+				</td>
 			</tr>
 			<tr>
 				<th>재고</th>

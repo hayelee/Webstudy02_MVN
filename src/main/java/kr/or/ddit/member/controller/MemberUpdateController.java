@@ -1,5 +1,6 @@
 package kr.or.ddit.member.controller;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,11 @@ import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.mvc.annotation.RequestMethod;
 import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
+import kr.or.ddit.mvc.annotation.resolvers.RequestPart;
 import kr.or.ddit.mvc.annotation.stereotype.Controller;
 import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
+import kr.or.ddit.mvc.multipart.MultipartFile;
+import kr.or.ddit.mvc.multipart.MultipartHttpServletRequest;
 import kr.or.ddit.validate.UpdateGroup;
 import kr.or.ddit.validate.ValidationUtils;
 import kr.or.ddit.vo.MemberVO;
@@ -31,6 +35,7 @@ public class MemberUpdateController {
 			HttpSession session
 //			, @SessionAttribute("authMember") MemberVO authMember // 나중에 resolver만들어보기~
 			, HttpServletRequest req, HttpServletResponse resp
+			
 	) {
 		MemberVO authMember = (MemberVO) session.getAttribute("authMember");
 		
@@ -48,7 +53,11 @@ public class MemberUpdateController {
 	public String updateProcess(
 			@ModelAttribute("member") MemberVO member //필요한 파라미터 다 넣어줌
 			, HttpServletRequest req
-		){
+			, @RequestPart(value="memImage", required=false) MultipartFile memImage
+			, HttpSession session
+		) throws IOException{
+//		2번째 방법
+		member.setMemImage(memImage);
 		
 		String viewName = null;
 		
@@ -72,6 +81,9 @@ public class MemberUpdateController {
 				break;
 			default:
 				// 성공적으로 수정 완료~
+				MemberVO modifiedMember = service.retrieveMember(member.getMemId());
+				session.setAttribute("authMember", modifiedMember);
+				
 				viewName = "redirect:/mypage.do";
 				break;
 			}

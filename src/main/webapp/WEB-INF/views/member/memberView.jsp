@@ -29,6 +29,12 @@
 			<td>${member.memName}</td>
 		</tr>
 		<tr>
+			<th>프로필이미지</th>
+			<td>
+				<img src="data:image/*;base64,${member.base64MemImg}" />
+			</td>
+		</tr>
+		<tr>
 			<th>주민번호1</th>
 			<td>${member.memRegno1}</td>
 		</tr>

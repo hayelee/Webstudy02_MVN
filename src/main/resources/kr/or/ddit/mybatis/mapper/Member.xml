@@ -73,6 +73,7 @@
           MEM_MILEAGE,
           MEM_DELETE
           , MEM_ROLE
+          , MEM_IMG
           , PROD_ID, PROD_NAME, PROD_COST, PROD_PRICE, PROD_MILEAGE
           , LPROD_NM
           , BUYER_NAME, BUYER_ADD1, BUYER_CHARGER
@@ -99,8 +100,9 @@
          , MEM_LIKE
          , MEM_MEMORIAL
          , MEM_MEMORIALDAY
-         , MEM_MILEAGE
-         , MEM_DELETE
+         <if test="memImg neq null and memImg.length gt 0">
+         , MEM_IMG
+         </if>
       ) VALUES (
          #{memId,jdbcType=VARCHAR}
          , #{memPass,jdbcType=VARCHAR}
@@ -119,8 +121,9 @@
          , #{memLike,jdbcType=VARCHAR}
          , #{memMemorial,jdbcType=VARCHAR}
          , TO_DATE(#{memMemorialday,jdbcType=DATE}, 'YYYY-MM-DD')
-         , #{memMileage,jdbcType=NUMERIC}
-         , #{memDelete,jdbcType=VARCHAR}
+         <if test="memImg neq null and memImg.length gt 0">
+         , #{memImg, jdbcType=BLOB}
+         </if>
       )
    </insert>
      <update id="updateMember" parameterType="MemberVO">
@@ -139,6 +142,9 @@
          , MEM_LIKE = #{memLike,jdbcType=VARCHAR}
          , MEM_MEMORIAL = #{memMemorial,jdbcType=VARCHAR}
          , MEM_MEMORIALDAY = TO_DATE(#{memMemorialday,jdbcType=DATE}, 'YYYY-MM-DD')
+         <if test="memImg neq null and memImg.length gt 0">
+         , MEM_IMG = #{memImg, jdbcType=BLOB}
+         </if>
       WHERE MEM_ID = #{memId}
    </update>
    <delete id="deleteMember" parameterType="string">

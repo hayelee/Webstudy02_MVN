@@ -15,7 +15,7 @@
 </head>
 <body>
 	<h4>가입 양식</h4>
-	<form method="post">
+	<form method="post" enctype="multipart/form-data">
 		<table class="table table-bordered">
 			<tr>
 				<th>회원아이디</th>
@@ -33,6 +33,13 @@
 				<td><input class="form-control" type="text" 
 					name="memName" value="${member.memName}" /><span
 					class="text-danger">${errors.memName}</span></td>
+			</tr>
+			<tr>
+				<th>회훤프로필</th>
+				<td>
+					<input type="file" name="memImage" accept="image/*"/>
+					<span class="text-danger">${errors.memImage }</span>
+				</td>
 			</tr>
 			<tr>
 				<th>주민번호1</th>

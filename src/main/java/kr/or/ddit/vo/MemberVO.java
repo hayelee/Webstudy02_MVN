@@ -1,6 +1,8 @@
 package kr.or.ddit.vo;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.Base64;
 import java.util.List;
 
 import javax.validation.constraints.Email;
@@ -12,6 +14,7 @@ import javax.validation.groups.Default;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.or.ddit.mvc.multipart.MultipartFile;
 import kr.or.ddit.validate.DeleteGroup;
 import kr.or.ddit.validate.InsertGroup;
 import lombok.Data;
@@ -108,4 +111,21 @@ public class MemberVO implements Serializable {
 	
 	private String memRole;
 	
+	private byte[] memImg; // DB와 커뮤니케이트 할 때 사용
+	private MultipartFile memImage; // client와 커뮤니케이트 할 때 사용
+	
+	//@data 주석으로 하고 만들면 얘만 setter안만들어짐! 굳이 컨트롤러에 있을 필요 없어요!
+	public void setMemImage(MultipartFile memImage) throws IOException {
+		if(memImage!=null && !memImage.isEmpty()) {
+			this.memImage = memImage;
+			this.memImg = memImage.getBytes();
+		}
+	}
+	
+	public String getBase64MemImg() { //알파벳과 숫자로 되어 있는 문자로 인코딩
+		if(memImg!=null)
+			return Base64.getEncoder().encodeToString(memImg);
+		else
+			return null;
+	}
 }

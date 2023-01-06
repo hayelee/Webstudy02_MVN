@@ -141,18 +141,17 @@
 	<update id="updateProd" parameterType="ProdVO">
 	UPDATE PROD
     SET
-    	prod_name = #{prodName,jdbcType=VARCHAR}
-	    , prod_lgu = #{prodLgu,jdbcType=CHAR}
-	    , prod_buyer = #{prodBuyer,jdbcType=CHAR}
-	    , prod_cost = #{prodCost,jdbcType=NUMERIC}
+	    prod_cost = #{prodCost,jdbcType=NUMERIC}
 	    , prod_price = #{prodPrice,jdbcType=NUMERIC}
 	    , prod_sale = #{prodSale,jdbcType=NUMERIC}
 	    , prod_outline = #{prodOutline,jdbcType=VARCHAR}
 	    , prod_detail = #{prodDetail,jdbcType=CLOB}
-	    , prod_img = #{prodImg,jdbcType=VARCHAR}
 	    , prod_totalstock = #{prodTotalstock,jdbcType=NUMERIC}
 	    , prod_insdate = #{prodInsdate,jdbcType=DATE}
 	    , prod_properstock = #{prodProperstock,jdbcType=NUMERIC}
+    	, prod_name = #{prodName,jdbcType=VARCHAR}
+	    , prod_lgu = #{prodLgu,jdbcType=CHAR}
+	    , prod_buyer = #{prodBuyer,jdbcType=CHAR}
 	    , prod_size = #{prodSize,jdbcType=VARCHAR}
 	    , prod_color = #{prodColor,jdbcType=VARCHAR}
 	    , prod_delivery = #{prodDelivery,jdbcType=VARCHAR}
@@ -160,8 +159,11 @@
 	    , prod_qtyin = #{prodQtyin,jdbcType=NUMERIC}
 	    , prod_qtysale = #{prodQtysale,jdbcType=NUMERIC}
 	    , prod_mileage = #{prodMileage,jdbcType=NUMERIC}
+	    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(prodImg)">
+	 	, prod_img = #{prodImg,jdbcType=VARCHAR}
+	    </if>
 	WHERE
-    	PROD_ID = #{prodId}
+    	PROD_ID = #{prodId,jdbcType=VARCHAR}
    
 	</update>
 </mapper>

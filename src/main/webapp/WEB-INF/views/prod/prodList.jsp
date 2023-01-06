@@ -9,7 +9,7 @@
 <jsp:include page="/includee/preScript.jsp" />
 </head>
 <body>
-<table>
+<table class="table table-bordered">
    <thead>
       <tr>
          <th>일련번호</th>
